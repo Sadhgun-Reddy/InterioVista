@@ -7,6 +7,7 @@ const ProcessStep = ({ number, title, description, imageUrl, isRight = false }) 
         src={imageUrl} 
         alt={`Step ${number}`}
         className="w-full h-full object-contain"
+        loading="lazy" // ⚡ Bolt: Lazy load process step images
       />
     </div>
     <div className="flex-1">
