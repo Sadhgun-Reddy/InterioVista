@@ -73,7 +73,7 @@ const Header = () => {
                 className="relative group px-3"
               >
                 <button
-                  className={`flex items-center py-2 text-sm font-medium whitespace-nowrap
+                  className={`flex items-center py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md px-2
                     ${activePath === item.path ? 'text-white' : 'text-gray-300 hover:text-white'}
                     ${item.isHighlighted ? 'text-blue-400' : ''}
                   `}
@@ -99,10 +99,10 @@ const Header = () => {
 
           {/* Right section */}
           <div className="flex-none flex items-center space-x-4">
-            <button className="p-2 hover:text-gray-300">
+            <button aria-label="Search" className="p-2 hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
               <Search className="h-5 w-5" />
             </button>
-            <button className="p-2 hover:text-gray-300">
+            <button aria-label="User profile" className="p-2 hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
               <User className="h-5 w-5" />
             </button>
           </div>
