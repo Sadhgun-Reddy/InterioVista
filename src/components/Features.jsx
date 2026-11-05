@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 
 const FeatureCard = ({ icon, title, description }) => (
   <div className="bg-gray-300 p-8 rounded-lg">

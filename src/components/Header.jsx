@@ -1,10 +1,17 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { Search, User, ChevronDown } from 'lucide-react';
+import { Search, User, ChevronDown, ShoppingCart } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const Header = () => {
   const [activePath, setActivePath] = useState('/');
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const { user } = useAuth();
+  const { cartItems } = useCart();
+  const navigate = useNavigate();
+
+  const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const dropdownOptions = {
     living: ['Sofas', 'Tables', 'Chairs', 'Decor'],
@@ -19,19 +26,20 @@ const Header = () => {
 
   const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'Living', path: '/living', hasDropdown: true },
-    { name: 'Storage', path: '/storage', hasDropdown: true },
-    { name: 'Dining', path: '/dining', hasDropdown: true },
-    { name: 'Bedroom', path: '/bedroom', hasDropdown: true },
-    { name: 'Matress', path: '/matress', hasDropdown: true, isHighlighted: true },
-    { name: 'Study', path: '/study', hasDropdown: true },
-    { name: 'Office', path: '/office', hasDropdown: true },
-    { name: 'Outdoor', path: '/outdoor', hasDropdown: true },
+    { name: 'Products', path: '/products' },
+    { name: 'Living', path: '/products?category=Living', hasDropdown: true },
+    { name: 'Storage', path: '/products?category=Storage', hasDropdown: true },
+    { name: 'Dining', path: '/products?category=Dining', hasDropdown: true },
+    { name: 'Bedroom', path: '/products?category=Bedroom', hasDropdown: true },
+    { name: 'Study', path: '/products?category=Study', hasDropdown: true },
+    { name: 'Office', path: '/products?category=Office', hasDropdown: true },
+    { name: 'Outdoor', path: '/products?category=Outdoor', hasDropdown: true },
   ];
 
   const handleNavClick = (path, name) => {
     setActivePath(path);
     setActiveDropdown(activeDropdown === name.toLowerCase() ? null : name.toLowerCase());
+    navigate(path);
   };
 
   const Dropdown = ({ options, isOpen }) => {
@@ -57,11 +65,11 @@ const Header = () => {
       <div className="w-full px-6">
         <div className="flex items-center justify-between h-16 max-w-[1920px] mx-auto">
           {/* Logo */}
-          <div className="flex-none">
+          <div className="flex-none cursor-pointer" onClick={() => navigate('/')}>
             <img 
-              src="https://s3-alpha-sig.figma.com/img/d7fb/35d1/0a5d5473989ba4ec575b8af8fe1f746c?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=n-vbAPQ05LmD8Nda2f2mGNfZTgj7C6YBEioDb~0ls1JxMZ5voB4rtvKkqDu8mDFa9VKS4X~28N4hO14wVLH-Aaips877QZP2jTVclw~oKbP2-R0Qz-NXaQES6jgHdYYG6XJTT31iOazUoRUpPb3Y9U-8~DwuxkzPZnq5SG3zOgqASsaIeiHiO7uId7sMl7jnpznKoyNk~F-lEI73oUHez4df0sd86oEDWzKWRAGY~oxiwQv2J5iJ3PZpHP3RN-~i7P29JdHP6US2hi4N-MOlhHADGHdxVYkiuJ~y4k1eyZUHYlLo-~TAMM1nHamq4uA7BPtgQPLwN19MZEeOlGHqOw__" 
+              src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=150&h=150"
               alt="Logo" 
-              className="h-20 w-20 rounded-full"
+              className="h-12 w-12 rounded-full object-cover"
             />
           </div>
 
@@ -89,7 +97,7 @@ const Header = () => {
                 </button>
                 {item.hasDropdown && (
                   <Dropdown 
-                    options={dropdownOptions[item.name.toLowerCase()]} 
+                    options={dropdownOptions[item.name.toLowerCase()] || []}
                     isOpen={activeDropdown === item.name.toLowerCase()}
                   />
                 )}
@@ -99,12 +107,28 @@ const Header = () => {
 
           {/* Right section */}
           <div className="flex-none flex items-center space-x-4">
-            <button className="p-2 hover:text-gray-300">
+            <Link to="/products" className="p-2 hover:text-gray-300">
               <Search className="h-5 w-5" />
-            </button>
-            <button className="p-2 hover:text-gray-300">
+            </Link>
+
+            <Link to={user ? "/profile" : "/login"} className="p-2 hover:text-gray-300 relative group">
               <User className="h-5 w-5" />
-            </button>
+              {user && (
+                <div className="absolute top-full right-0 mt-2 w-32 bg-white text-black text-sm rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                    <div className="px-4 py-2 border-b font-semibold">Hello, {user.username}</div>
+                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</div>
+                </div>
+              )}
+            </Link>
+
+            <Link to="/cart" className="p-2 hover:text-gray-300 relative">
+              <ShoppingCart className="h-5 w-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
           </div>
         </div>
       </div>
