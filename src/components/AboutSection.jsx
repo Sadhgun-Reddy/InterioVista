@@ -52,6 +52,7 @@ const AboutSection = () => {
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"
                 alt="Living room with wall art"
                 className="w-full h-60 object-cover rounded-lg"
+                loading="lazy" // ⚡ Bolt: Lazy load gallery images
               />
             </div>
             <div className="col-span-8">
@@ -59,6 +60,7 @@ const AboutSection = () => {
                 src="https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80&w=800"
                 alt="Bedroom interior"
                 className="w-full h-60 object-cover rounded-lg"
+                loading="lazy"
                 />
             </div>
             
@@ -68,6 +70,7 @@ const AboutSection = () => {
                 src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?auto=format&fit=crop&q=80&w=800"
                 alt="Modern living room"
                 className="w-full h-60 object-cover rounded-lg"
+                loading="lazy"
                 />
             </div>
             <div className="col-span-4">
@@ -75,6 +78,7 @@ const AboutSection = () => {
                 src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800"
                 alt="Bedroom design"
                 className="w-full h-60 object-cover rounded-lg"
+                loading="lazy"
               />
             </div>
           </div>

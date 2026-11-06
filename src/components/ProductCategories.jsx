@@ -106,6 +106,7 @@ const ProductCategories = () => {
                   alt={category.name}
                   src={category.icon}
                   className="w-16 h-16 mt-8"
+                  loading="lazy" // ⚡ Bolt: Native lazy loading to improve page load time
                 />
               </div>
             ))}
@@ -131,6 +132,7 @@ const ProductCategories = () => {
                 src={segment.image}
                 alt={segment.alt}
                 className="w-full h-72 object-cover"
+                loading="lazy" // ⚡ Bolt: Lazy load below-the-fold images
               />
               <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
                 <h4 className="text-white text-2xl font-bold mb-4">{segment.title}</h4>
@@ -171,6 +173,7 @@ const ProductCategories = () => {
                 src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                loading="lazy" // ⚡ Bolt: Lazy load grid images to save bandwidth
               />
               {/* Hover Overlay with Button */}
               <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

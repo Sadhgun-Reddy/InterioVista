@@ -48,6 +48,7 @@ const InteriorDesign = () => {
                   src={img}
                   alt={`Interior design ${index + 1}`}
                   className="w-full h-full object-cover"
+                  loading="lazy" // ⚡ Bolt: Lazy load carousel images
                 />
               </div>
             ))}

@@ -30,16 +30,17 @@ const Footer = () => {
               src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=150&h=150"
               alt="United Buildpro Logo" 
               className="w-24 h-24 mb-6"
+              loading="lazy" // ⚡ Bolt: Lazy load footer logo
             />
             <p className="text-sm leading-relaxed mb-6">
               Your dream space deserves the best execution, and that's where United Buildpro Pvt. Ltd excels. Our construction services encompass everything from foundational work to structural builds, tailored to residential, commercial, and industrial needs. We pride ourselves on using high-quality materials and advanced techniques to ensure durability and efficiency in every project we undertake.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="hover:opacity-80">
-                <img src="https://image.similarpng.com/very-thumbnail/2020/06/Black-icon-Instagram-logo-transparent-PNG.png" alt="Instagram" className="w-6 h-6" />
+                <img src="https://image.similarpng.com/very-thumbnail/2020/06/Black-icon-Instagram-logo-transparent-PNG.png" alt="Instagram" className="w-6 h-6" loading="lazy" />
               </a>
               <a href="#" className="hover:opacity-80">
-                <img src="https://image.similarpng.com/very-thumbnail/2021/01/Black-linkedin-logo-design-on-transparent-background-PNG.png" alt="LinkedIn" className="w-6 h-6" />
+                <img src="https://image.similarpng.com/very-thumbnail/2021/01/Black-linkedin-logo-design-on-transparent-background-PNG.png" alt="LinkedIn" className="w-6 h-6" loading="lazy" />
               </a>
             </div>
           </div>
@@ -83,7 +84,7 @@ const Footer = () => {
                 </p>
             </div>
             <div className="flex space-x-4">
-                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800" alt="payments"/>
+                <img src="https://s3-alpha-sig.figma.com/img/3ab9/eeb0/e196ede389387ab9e06d10d71ce9b10e?Expires=1737331200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=LNTwUY4uSrRu2N7zb5JVUSxrebvHcRD16NWb6iCg~nP9UvpRlYMSof~ZUorH0ehgJFPOFR9wmDxuzdDoq-ez5fgNVVg4XdLzitmu5T~HKn1SS20Ox~ST5gis5Kp60DTVNn8OO8VgeNhOR3X0xIrGn8LXHEwdp~OFMluGXPRJMWsEeoU5PBpG93z45rOKcIaB4Lhk5CJA7Dw6BpLnPJL~VXfAzanIznxxRYq3EP1wi3JXo1i4oeKlBufOjH5IgKmaTu2PpmamU-KzrR91OaddMfoylzO8dibDAWYwRGh7p38g~QQx5H4w~EYAF5lKEmoP76bsyG7w0xMBCmtBRnmHcQ__" alt="payments" loading="lazy" />
               {/* <img src="/visa.png" alt="Visa" className="h-8" />
               <img src="/mastercard.png" alt="Mastercard" className="h-8" />
               <img src="/maestro.png" alt="Maestro" className="h-8" />
