@@ -9,7 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_for_development';
+// Security Fix: Do not use hardcoded default secrets.
+// Require environment variable to be set to prevent forging JWT tokens.
+if (!process.env.JWT_SECRET) {
+    console.error('FATAL ERROR: JWT_SECRET environment variable is not set.');
+    process.exit(1);
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Authenticate Token Middleware
 const authenticateToken = (req, res, next) => {
