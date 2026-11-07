@@ -23,9 +23,14 @@ Initially, the project was a basic, frontend-only Vite+React shell. It had place
 ### E. Routing and bug fixes
 - Implemented full frontend routing with nested paths (`/`, `/products`, `/products/:id`, `/login`, `/register`, `/cart`, `/checkout`, `/profile`).
 - Fixed critical bugs identified in Code Review: ensuring `getCartTotal` was properly exported in `CartContext`, removing hardcoded secrets by integrating `.env`, and fixing hardcoded frontend API endpoints.
+- Resolved backend testing issues by dynamically extracting a valid product ID instead of relying on a hardcoded "1".
+- Fixed database seed (`sqlite_sequence`) so that mock products reliably generate IDs starting from 1, matching frontend filters dynamically.
 - Cleaned up multiple ESLint warnings related to unused imports and props.
 
 ### F. UI/UX improvements
+- Added a mobile-friendly hamburger menu for Header navigation on smaller screens.
+- Refactored `Footer.jsx` grid layouts and removed hardcoded margins that previously broke responsive design on smaller screens.
+- Linked Header dropdown category items directly to matching pre-filtered product searches.
 - Integrated `react-toastify` to provide immediate, visually pleasing feedback for user actions (adding to cart, login success, errors).
 - Redesigned the Profile page to clearly show order history using professional Tailwind CSS components and `lucide-react` icons.
 - Added loading spinners for asynchronous data fetching and improved "empty states" (e.g., empty cart, no search results).

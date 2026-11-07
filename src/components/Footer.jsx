@@ -46,31 +46,35 @@ const Footer = () => {
           </div>
 
           {/* Navigation Links */}
-          
-
-          <div className="md:col-span-4 ml-96">
-            <ul className="space-y-2">
-              {links.mainLinks.map((link) => (
-                  <li key={link.title}>
-                  <a href={link.href} className="text-sm hover:text-gray-300">
-                    {link.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          <div className="md:col-span-4 flex md:justify-center">
+            <div>
+              <h3 className="text-lg font-bold mb-4">Shop</h3>
+              <ul className="space-y-2">
+                {links.mainLinks.map((link) => (
+                    <li key={link.title}>
+                    <a href={link.href} className="text-sm hover:text-gray-300">
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Project Types */}
-          <div className="md:col-span-4 ml-60">
-            <ul className="space-y-2">
-              {links.projectTypes.map((link) => (
-                  <li key={link.title}>
-                  <a href={link.href} className="text-sm hover:text-gray-300">
-                    {link.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          <div className="md:col-span-4 flex md:justify-center">
+            <div>
+              <h3 className="text-lg font-bold mb-4">Projects</h3>
+              <ul className="space-y-2">
+                {links.projectTypes.map((link) => (
+                    <li key={link.title}>
+                    <a href={link.href} className="text-sm hover:text-gray-300">
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
               

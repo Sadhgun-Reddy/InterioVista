@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, User, ChevronDown, ShoppingCart } from 'lucide-react';
+import { Search, User, ChevronDown, ShoppingCart, Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 const Header = () => {
   const [activePath, setActivePath] = useState('/');
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const { cartItems } = useCart();
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Header = () => {
     storage: ['Cabinets', 'Shelves', 'Wardrobes', 'Organizers'],
     dining: ['Dining Sets', 'Tables', 'Chairs', 'Sideboards'],
     bedroom: ['Beds', 'Wardrobes', 'Nightstands', 'Dressers'],
-    matress: ['Spring', 'Foam', 'Hybrid', 'Orthopedic'],
+    mattress: ['Spring', 'Foam', 'Hybrid', 'Orthopedic'],
     study: ['Desks', 'Chairs', 'Bookshelves', 'Lamps'],
     office: ['Workstations', 'Chairs', 'Storage', 'Accessories'],
     outdoor: ['Sets', 'Chairs', 'Tables', 'Umbrellas'],
@@ -42,19 +43,19 @@ const Header = () => {
     navigate(path);
   };
 
-  const Dropdown = ({ options, isOpen }) => {
+  const Dropdown = ({ options, isOpen, categoryName }) => {
     if (!isOpen) return null;
 
     return (
       <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-50">
         {options.map((option, index) => (
-          <a
+          <Link
             key={index}
-            href="#"
+            to={`/products?category=${categoryName}&search=${option}`}
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           >
             {option}
-          </a>
+          </Link>
         ))}
       </div>
     );
@@ -99,14 +100,15 @@ const Header = () => {
                   <Dropdown 
                     options={dropdownOptions[item.name.toLowerCase()] || []}
                     isOpen={activeDropdown === item.name.toLowerCase()}
+                    categoryName={item.name}
                   />
                 )}
               </div>
             ))}
           </nav>
 
-          {/* Right section */}
-          <div className="flex-none flex items-center space-x-4">
+          {/* Right section & Mobile Menu Toggle */}
+          <div className="flex-none flex items-center space-x-2 md:space-x-4">
             <button aria-label="Search" className="p-2 hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
               <Search className="h-5 w-5" />
             </button>
@@ -130,8 +132,35 @@ const Header = () => {
                 </span>
               )}
             </Link>
+            <button
+              className="lg:hidden p-2 text-white hover:text-gray-300 focus:outline-none"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <nav className="lg:hidden py-4 border-t border-gray-800 flex flex-col space-y-2">
+            {navItems.map((item) => (
+              <div key={item.name} className="flex flex-col">
+                <button
+                  className={`text-left py-2 px-4 text-sm font-medium ${
+                    activePath === item.path ? 'text-white bg-gray-800' : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                  } rounded`}
+                  onClick={() => {
+                    handleNavClick(item.path, item.name);
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  {item.name}
+                </button>
+              </div>
+            ))}
+          </nav>
+        )}
       </div>
     </header>
   );
