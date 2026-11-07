@@ -43,15 +43,18 @@ const Cart = () => {
 
               <div className="flex items-center gap-2">
                 <button
+                  aria-label={`Decrease quantity of ${item.name}`}
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md hover:bg-gray-300"
+                  disabled={item.quantity <= 1}
+                  className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
                 >
                   -
                 </button>
                 <span className="w-8 text-center">{item.quantity}</span>
                 <button
+                  aria-label={`Increase quantity of ${item.name}`}
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md hover:bg-gray-300"
+                  className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
                 >
                   +
                 </button>
@@ -62,8 +65,9 @@ const Cart = () => {
               </div>
 
               <button
+                aria-label={`Remove ${item.name} from cart`}
                 onClick={() => removeFromCart(item.id)}
-                className="text-red-500 hover:text-red-700 ml-4 p-2"
+                className="text-red-500 hover:text-red-700 ml-4 p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-md"
                 title="Remove item"
               >
                 ✕
