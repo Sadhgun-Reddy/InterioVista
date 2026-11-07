@@ -34,10 +34,13 @@ describe('Backend APIs', () => {
   });
 
   it('should fetch a product by id', async () => {
-    // Assuming product ID 1 exists from seeding
-    const res = await request(app).get('/api/products/1');
+    // Fetch all products first to get a valid ID
+    const allProducts = await request(app).get('/api/products');
+    const productId = allProducts.body[0].id;
+
+    const res = await request(app).get(`/api/products/${productId}`);
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('id', 1);
+    expect(res.body).toHaveProperty('id', productId);
   });
 
   it('should filter products by search query', async () => {
@@ -48,12 +51,15 @@ describe('Backend APIs', () => {
   });
 
   it('should place an order', async () => {
+    const allProducts = await request(app).get('/api/products');
+    const productId = allProducts.body[0].id;
+
     const res = await request(app)
       .post('/api/orders')
       .set('Authorization', `Bearer ${token}`)
       .send({
         totalAmount: 100.0,
-        items: [{ productId: 1, quantity: 1, price: 100.0 }]
+        items: [{ productId: productId, quantity: 1, price: 100.0 }]
       });
 
     expect(res.status).toBe(201);

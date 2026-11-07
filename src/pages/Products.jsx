@@ -13,7 +13,11 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const { addToCart } = useCart();
 
-  const categories = ['Living', 'Storage', 'Dining', 'Bedroom', 'Matress', 'Study', 'Office', 'Outdoor'];
+  useEffect(() => {
+    setSearchTerm(initialSearch);
+  }, [initialSearch]);
+
+  const categories = ['Living', 'Storage', 'Dining', 'Bedroom', 'Mattress', 'Study', 'Office', 'Outdoor'];
 
   useEffect(() => {
     const fetchProducts = async () => {
