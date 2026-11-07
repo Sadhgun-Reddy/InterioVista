@@ -65,13 +65,13 @@ const Header = () => {
       <div className="w-full px-6">
         <div className="flex items-center justify-between h-16 max-w-[1920px] mx-auto">
           {/* Logo */}
-          <div className="flex-none cursor-pointer" onClick={() => navigate('/')}>
+          <Link to="/" aria-label="Go to homepage" className="flex-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-full">
             <img 
               src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=150&h=150"
               alt="Logo" 
               className="h-12 w-12 rounded-full object-cover"
             />
-          </div>
+          </Link>
 
           {/* Navigation */}
           <nav className="hidden lg:flex flex-1 justify-center items-center mx-8">
@@ -110,17 +110,19 @@ const Header = () => {
             <button aria-label="Search" className="p-2 hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
               <Search className="h-5 w-5" />
             </button>
-            <button aria-label="User profile" className="p-2 hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
-              <User className="h-5 w-5" />
+            <div className="relative group">
+              <Link to={user ? '/profile' : '/login'} aria-label="User profile" className="flex items-center p-2 hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
+                <User className="h-5 w-5" />
+              </Link>
               {user && (
                 <div className="absolute top-full right-0 mt-2 w-32 bg-white text-black text-sm rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                    <div className="px-4 py-2 border-b font-semibold">Hello, {user.username}</div>
-                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</div>
+                    <div className="px-4 py-2 border-b font-semibold truncate">Hello, {user.username}</div>
+                    <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</Link>
                 </div>
               )}
-            </Link>
+            </div>
 
-            <Link to="/cart" className="p-2 hover:text-gray-300 relative">
+            <Link to="/cart" aria-label="Shopping Cart" className="p-2 hover:text-gray-300 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md">
               <ShoppingCart className="h-5 w-5" />
               {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">

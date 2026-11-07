@@ -1,3 +1,3 @@
-## 2024-11-05 - Header Button Accessibility
-**Learning:** Icon-only navigation buttons in the top header were missing accessible names, leading to a degraded screen reader experience. Focus styles were also missing, hampering keyboard navigation.
-**Action:** Always verify icon-only interactive elements have clear `aria-label` attributes and ensure `focus-visible` styles are present for critical navigation actions.
+## 2024-11-06 - Header Accessibility
+**Learning:** The user profile dropdown was nested inside a Link tag, which is invalid HTML semantics and breaks accessibility.
+**Action:** Separated the Link and dropdown into siblings inside a relative container to maintain hover logic while ensuring proper accessibility semantics.
