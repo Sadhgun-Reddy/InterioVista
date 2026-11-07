@@ -124,46 +124,82 @@ app.get('/api/products/:id', (req, res) => {
 // --- Order Routes ---
 
 app.post('/api/orders', authenticateToken, (req, res) => {
-    const { items, totalAmount } = req.body; // items: [{productId, quantity, price}]
+    const { items } = req.body; // items: [{productId, quantity}]
 
     if (!items || items.length === 0) {
         return res.status(400).json({ error: 'Order must contain items' });
     }
 
-    db.serialize(() => {
-        db.run('BEGIN TRANSACTION');
+    // 🛡️ Sentinel Security Fix: Do not trust client-provided price and totalAmount.
+    // Fetch actual prices from the database to calculate verified total amount.
+    const productIds = items.map(item => item.productId);
+    const placeholders = productIds.map(() => '?').join(',');
 
-        db.run('INSERT INTO Orders (userId, totalAmount, status) VALUES (?, ?, ?)',
-            [req.user.id, totalAmount, 'pending'],
-            function(err) {
-                if (err) {
-                    db.run('ROLLBACK');
-                    return res.status(500).json({ error: 'Database error creating order' });
-                }
+    db.all(`SELECT id, price FROM Products WHERE id IN (${placeholders})`, productIds, (err, products) => {
+        if (err) return res.status(500).json({ error: 'Database error fetching products' });
 
-                const orderId = this.lastID;
-                const stmt = db.prepare('INSERT INTO OrderItems (orderId, productId, quantity, price) VALUES (?, ?, ?, ?)');
+        const productMap = {};
+        products.forEach(p => {
+            productMap[p.id] = p.price;
+        });
 
-                let hasError = false;
-                items.forEach(item => {
-                    stmt.run(orderId, item.productId, item.quantity, item.price, (err) => {
-                        if (err) hasError = true;
-                    });
-                });
+        let calculatedTotalAmount = 0;
+        let validatedItems = [];
+        let missingProducts = false;
 
-                stmt.finalize((err) => {
-                    if (hasError || err) {
+        for (const item of items) {
+            const realPrice = productMap[item.productId];
+            if (realPrice === undefined) {
+                missingProducts = true;
+                break;
+            }
+            calculatedTotalAmount += realPrice * item.quantity;
+            validatedItems.push({
+                productId: item.productId,
+                quantity: item.quantity,
+                price: realPrice
+            });
+        }
+
+        if (missingProducts) {
+            return res.status(400).json({ error: 'One or more products not found' });
+        }
+
+        db.serialize(() => {
+            db.run('BEGIN TRANSACTION');
+
+            db.run('INSERT INTO Orders (userId, totalAmount, status) VALUES (?, ?, ?)',
+                [req.user.id, calculatedTotalAmount, 'pending'],
+                function(err) {
+                    if (err) {
                         db.run('ROLLBACK');
-                        return res.status(500).json({ error: 'Database error creating order items' });
+                        return res.status(500).json({ error: 'Database error creating order' });
                     }
 
-                    db.run('COMMIT', (err) => {
-                        if (err) return res.status(500).json({ error: 'Database error committing transaction' });
-                        res.status(201).json({ message: 'Order created successfully', orderId });
+                    const orderId = this.lastID;
+                    const stmt = db.prepare('INSERT INTO OrderItems (orderId, productId, quantity, price) VALUES (?, ?, ?, ?)');
+
+                    let hasError = false;
+                    validatedItems.forEach(item => {
+                        stmt.run(orderId, item.productId, item.quantity, item.price, (err) => {
+                            if (err) hasError = true;
+                        });
                     });
-                });
-            }
-        );
+
+                    stmt.finalize((err) => {
+                        if (hasError || err) {
+                            db.run('ROLLBACK');
+                            return res.status(500).json({ error: 'Database error creating order items' });
+                        }
+
+                        db.run('COMMIT', (err) => {
+                            if (err) return res.status(500).json({ error: 'Database error committing transaction' });
+                            res.status(201).json({ message: 'Order created successfully', orderId });
+                        });
+                    });
+                }
+            );
+        });
     });
 });
 
