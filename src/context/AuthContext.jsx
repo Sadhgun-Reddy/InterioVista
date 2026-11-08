@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const res = await axios.get('/api/auth/me', {
+                    const res = await api.get('/api/auth/me', {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     setUser(res.data.user);
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const res = await axios.post('/api/auth/login', { username, password });
+            const res = await api.post('/api/auth/login', { username, password });
             localStorage.setItem('token', res.data.token);
             setUser(res.data.user);
             toast.success(`Welcome back, ${res.data.user.username}!`);
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password) => {
         try {
-            const res = await axios.post('/api/auth/register', { username, password });
+            const res = await api.post('/api/auth/register', { username, password });
             localStorage.setItem('token', res.data.token);
             setUser(res.data.user);
             toast.success('Registration successful! Welcome to the store.');

@@ -223,7 +223,10 @@ app.get('/api/orders', authenticateToken, (req, res) => {
         GROUP BY Orders.id
         ORDER BY Orders.createdAt DESC
     `, [req.user.id], (err, orders) => {
-        if (err) return res.status(500).json({ error: 'Database error', details: err.message });
+        if (err) {
+            console.error('Error fetching orders:', err);
+            return res.status(500).json({ error: 'Failed to fetch orders' });
+        }
 
         // Parse the JSON string back into an object array for each order
         const parsedOrders = orders.map(order => ({
