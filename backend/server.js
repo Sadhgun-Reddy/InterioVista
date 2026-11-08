@@ -3,9 +3,20 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const db = require('./db');
 
 const app = express();
+
+// 🛡️ Sentinel Security Fix: Add rate limiting to authentication endpoints
+// to prevent brute-force attacks and credential stuffing.
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 auth requests per windowMs
+    message: { error: 'Too many authentication attempts from this IP, please try again after 15 minutes' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 app.use(cors());
 app.use(express.json());
 
@@ -33,7 +44,7 @@ const authenticateToken = (req, res, next) => {
 
 // --- Auth Routes ---
 
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', authLimiter, async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -59,7 +70,7 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', authLimiter, (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
