@@ -58,13 +58,15 @@ const InteriorDesign = () => {
         {/* Navigation buttons */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+          aria-label="Previous slide"
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+          aria-label="Next slide"
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -74,8 +76,9 @@ const InteriorDesign = () => {
           {images.map((_, index) => (
             <button
               key={index}
+              aria-label={`Go to slide ${index + 1}`}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
+              className={`w-2 h-2 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black ${
                 currentSlide === index ? 'bg-white' : 'bg-white/50'
               }`}
             />
