@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../utils/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -37,7 +37,7 @@ const Checkout = () => {
                 price: item.price
             }));
 
-            await axios.post('/api/orders', {
+            await api.post('/api/orders', {
                 items,
                 totalAmount: total
             }, {
@@ -125,21 +125,21 @@ const Checkout = () => {
                     <h3 className="text-xl font-bold mb-4 border-b pb-2">Shipping Information</h3>
                     <form onSubmit={handleCheckout} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            <input type="text" required defaultValue={user?.username || ''} className="w-full p-2 border rounded focus:ring-black focus:border-black" />
+                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input id="fullName" name="fullName" aria-label="Full Name" type="text" required defaultValue={user?.username || ''} className="w-full p-2 border rounded focus:ring-black focus:border-black focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-black outline-none" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                            <input type="text" required placeholder="123 Main St" className="w-full p-2 border rounded focus:ring-black focus:border-black" />
+                            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <input id="address" name="address" aria-label="Address" type="text" required placeholder="123 Main St" className="w-full p-2 border rounded focus:ring-black focus:border-black focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-black outline-none" />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                                <input type="text" required className="w-full p-2 border rounded focus:ring-black focus:border-black" />
+                                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                                <input id="city" name="city" aria-label="City" type="text" required className="w-full p-2 border rounded focus:ring-black focus:border-black focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-black outline-none" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
-                                <input type="text" required className="w-full p-2 border rounded focus:ring-black focus:border-black" />
+                                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                                <input id="zipCode" name="zipCode" aria-label="ZIP Code" type="text" required className="w-full p-2 border rounded focus:ring-black focus:border-black focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-black outline-none" />
                             </div>
                         </div>
 

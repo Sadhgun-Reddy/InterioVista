@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../utils/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { Package, Calendar, DollarSign, LogOut, ExternalLink } from 'lucide-react';
 
@@ -20,7 +20,7 @@ const Profile = () => {
         const fetchOrders = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get('/api/orders', {
+                const response = await api.get('/api/orders', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

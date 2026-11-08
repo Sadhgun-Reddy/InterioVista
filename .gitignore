@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 backend/database.sqlite
-backend/database.sqlite
 *.png
+.env

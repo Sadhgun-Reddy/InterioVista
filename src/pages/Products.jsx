@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { Search } from 'lucide-react';
 
@@ -28,7 +28,7 @@ const Products = () => {
         if (category) params.append('category', category);
         if (initialSearch) params.append('search', initialSearch);
 
-        const res = await axios.get(url + params.toString());
+        const res = await api.get(url + params.toString());
         setProducts(res.data);
       } catch (err) {
         console.error(err);
@@ -74,9 +74,10 @@ const Products = () => {
                 <input
                   type="radio"
                   name="category"
+                  aria-label="Filter by All Categories"
                   checked={category === ''}
                   onChange={() => handleCategoryChange('')}
-                  className="form-radio text-black focus:ring-black"
+                  className="form-radio text-black focus:ring-black focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black outline-none"
                 />
                 <span>All Categories</span>
               </label>
@@ -85,9 +86,10 @@ const Products = () => {
                   <input
                     type="radio"
                     name="category"
+                    aria-label={`Filter by ${cat}`}
                     checked={category === cat}
                     onChange={() => handleCategoryChange(cat)}
-                    className="form-radio text-black focus:ring-black"
+                    className="form-radio text-black focus:ring-black focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black outline-none"
                   />
                   <span>{cat}</span>
                 </label>
@@ -108,13 +110,14 @@ const Products = () => {
           <form onSubmit={handleSearch} className="relative w-full sm:w-72">
             <input
               type="text"
+              aria-label="Search products"
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:border-black"
+              className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:border-black focus-visible:ring-2 focus-visible:ring-black"
             />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            <button type="submit" className="hidden">Search</button>
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+            <button type="submit" className="hidden" aria-label="Submit search">Search</button>
           </form>
         </div>
 
