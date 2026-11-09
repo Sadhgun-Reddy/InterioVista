@@ -146,8 +146,15 @@ app.post('/api/orders', authenticateToken, (req, res) => {
         let calculatedTotalAmount = 0;
         let validatedItems = [];
         let missingProducts = false;
+        let invalidQuantity = false;
 
         for (const item of items) {
+            // 🛡️ Sentinel Security Fix: Validate that quantity is a positive integer
+            if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+                invalidQuantity = true;
+                break;
+            }
+
             const realPrice = productMap[item.productId];
             if (realPrice === undefined) {
                 missingProducts = true;
@@ -159,6 +166,10 @@ app.post('/api/orders', authenticateToken, (req, res) => {
                 quantity: item.quantity,
                 price: realPrice
             });
+        }
+
+        if (invalidQuantity) {
+            return res.status(400).json({ error: 'Invalid quantity' });
         }
 
         if (missingProducts) {
