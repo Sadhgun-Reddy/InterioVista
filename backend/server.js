@@ -130,6 +130,13 @@ app.post('/api/orders', authenticateToken, (req, res) => {
         return res.status(400).json({ error: 'Order must contain items' });
     }
 
+    // 🛡️ Sentinel Security Fix: Validate item quantities to prevent negative amounts.
+    for (const item of items) {
+        if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+            return res.status(400).json({ error: 'Invalid quantity' });
+        }
+    }
+
     // 🛡️ Sentinel Security Fix: Do not trust client-provided price and totalAmount.
     // Fetch actual prices from the database to calculate verified total amount.
     const productIds = items.map(item => item.productId);
