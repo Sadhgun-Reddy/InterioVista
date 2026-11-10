@@ -1,8 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { Search } from 'lucide-react';
+
+// ⚡ Bolt: Performance optimization
+// Categories moved outside the component to prevent recreation on every render
+const categories = ['Living', 'Storage', 'Dining', 'Bedroom', 'Mattress', 'Study', 'Office', 'Outdoor'];
+
+// ⚡ Bolt: Performance optimization
+// Memoizing the ProductCard component to prevent unnecessary re-renders of the entire
+// product grid when the user types in the search input, which updates the 'searchTerm' state.
+const ProductCard = memo(({ product, addToCart }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+      <Link to={`/products/${product.id}`}>
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          className="w-full h-56 object-cover hover:opacity-90 transition-opacity"
+          loading="lazy" // ⚡ Bolt: Performance optimization - Lazy load images in the grid
+        />
+      </Link>
+      <div className="p-4 flex flex-col flex-grow">
+        <div className="flex justify-between items-start mb-2">
+          <Link to={`/products/${product.id}`}>
+              <h3 className="text-lg font-semibold hover:text-gray-700 leading-tight">{product.name}</h3>
+          </Link>
+          <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded text-gray-600">
+              {product.category}
+          </span>
+        </div>
+        <p className="text-gray-600 flex-grow text-sm mb-4 line-clamp-2">{product.description}</p>
+        <div className="mt-auto flex items-center justify-between">
+          <span className="font-bold text-xl">${product.price.toFixed(2)}</span>
+          <button
+            onClick={() => addToCart(product)}
+            className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 text-sm font-medium transition-colors"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
+ProductCard.displayName = 'ProductCard';
+
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -16,8 +60,6 @@ const Products = () => {
   useEffect(() => {
     setSearchTerm(initialSearch);
   }, [initialSearch]);
-
-  const categories = ['Living', 'Storage', 'Dining', 'Bedroom', 'Mattress', 'Study', 'Office', 'Outdoor'];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -137,35 +179,7 @@ const Products = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map(product => (
-              <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
-                <Link to={`/products/${product.id}`}>
-                  <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-56 object-cover hover:opacity-90 transition-opacity"
-                  />
-                </Link>
-                <div className="p-4 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <Link to={`/products/${product.id}`}>
-                        <h3 className="text-lg font-semibold hover:text-gray-700 leading-tight">{product.name}</h3>
-                    </Link>
-                    <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded text-gray-600">
-                        {product.category}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 flex-grow text-sm mb-4 line-clamp-2">{product.description}</p>
-                  <div className="mt-auto flex items-center justify-between">
-                    <span className="font-bold text-xl">${product.price.toFixed(2)}</span>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 text-sm font-medium transition-colors"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <ProductCard key={product.id} product={product} addToCart={addToCart} />
             ))}
           </div>
         )}
