@@ -105,15 +105,16 @@ const Products = () => {
             {initialSearch && ` - Search: "${initialSearch}"`}
           </h2>
 
-          <form onSubmit={handleSearch} className="relative w-full sm:w-72">
+          <form onSubmit={handleSearch} className="relative w-full sm:w-72" role="search">
             <input
-              type="text"
+              type="search"
+              aria-label="Search products"
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:border-black"
+              className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:border-black focus-visible:ring-2 focus-visible:ring-black"
             />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" aria-hidden="true" />
             <button type="submit" className="hidden">Search</button>
           </form>
         </div>
@@ -159,7 +160,8 @@ const Products = () => {
                     <span className="font-bold text-xl">${product.price.toFixed(2)}</span>
                     <button
                       onClick={() => addToCart(product)}
-                      className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 text-sm font-medium transition-colors"
+                      aria-label={`Add ${product.name} to cart`}
+                      className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                     >
                       Add to Cart
                     </button>
