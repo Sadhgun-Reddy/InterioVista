@@ -46,7 +46,8 @@ const ProductDetails = () => {
 
           <button
             onClick={() => addToCart(product)}
-            className="mt-auto bg-black text-white px-8 py-4 rounded-md hover:bg-gray-800 text-lg font-bold transition-colors w-full md:w-auto self-start"
+            aria-label={`Add ${product.name} to cart`}
+            className="mt-auto bg-black text-white px-8 py-4 rounded-md hover:bg-gray-800 text-lg font-bold transition-colors w-full md:w-auto self-start focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
           >
             Add to Cart
           </button>
