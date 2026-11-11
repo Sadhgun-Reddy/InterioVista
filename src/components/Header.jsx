@@ -1,8 +1,58 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Search, User, ChevronDown, ShoppingCart, Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+
+// ⚡ Bolt: Performance optimization
+// Moving static options outside the component prevents them from being re-created on every render,
+// reducing memory allocation and GC overhead.
+const dropdownOptions = {
+  living: ['Sofas', 'Tables', 'Chairs', 'Decor'],
+  storage: ['Cabinets', 'Shelves', 'Wardrobes', 'Organizers'],
+  dining: ['Dining Sets', 'Tables', 'Chairs', 'Sideboards'],
+  bedroom: ['Beds', 'Wardrobes', 'Nightstands', 'Dressers'],
+  mattress: ['Spring', 'Foam', 'Hybrid', 'Orthopedic'],
+  study: ['Desks', 'Chairs', 'Bookshelves', 'Lamps'],
+  office: ['Workstations', 'Chairs', 'Storage', 'Accessories'],
+  outdoor: ['Sets', 'Chairs', 'Tables', 'Umbrellas'],
+};
+
+const navItems = [
+  { name: 'Home', path: '/' },
+  { name: 'Products', path: '/products' },
+  { name: 'Living', path: '/products?category=Living', hasDropdown: true },
+  { name: 'Storage', path: '/products?category=Storage', hasDropdown: true },
+  { name: 'Dining', path: '/products?category=Dining', hasDropdown: true },
+  { name: 'Bedroom', path: '/products?category=Bedroom', hasDropdown: true },
+  { name: 'Study', path: '/products?category=Study', hasDropdown: true },
+  { name: 'Office', path: '/products?category=Office', hasDropdown: true },
+  { name: 'Outdoor', path: '/products?category=Outdoor', hasDropdown: true },
+];
+
+// ⚡ Bolt: Performance optimization
+// Extracting inline component to module scope and wrapping with React.memo.
+// Inline component definitions in React cause the component to be unmounted and remounted
+// completely on every parent render, leading to significant DOM thrashing and performance loss.
+const Dropdown = memo(({ options, isOpen, categoryName }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+      {options.map((option, index) => (
+        <Link
+          key={index}
+          to={`/products?category=${categoryName}&search=${option}`}
+          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        >
+          {option}
+        </Link>
+      ))}
+    </div>
+  );
+});
+// Providing display name since it's an anonymous function inside memo
+Dropdown.displayName = 'Dropdown';
 
 const Header = () => {
   const [activePath, setActivePath] = useState('/');
@@ -14,51 +64,10 @@ const Header = () => {
 
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  const dropdownOptions = {
-    living: ['Sofas', 'Tables', 'Chairs', 'Decor'],
-    storage: ['Cabinets', 'Shelves', 'Wardrobes', 'Organizers'],
-    dining: ['Dining Sets', 'Tables', 'Chairs', 'Sideboards'],
-    bedroom: ['Beds', 'Wardrobes', 'Nightstands', 'Dressers'],
-    mattress: ['Spring', 'Foam', 'Hybrid', 'Orthopedic'],
-    study: ['Desks', 'Chairs', 'Bookshelves', 'Lamps'],
-    office: ['Workstations', 'Chairs', 'Storage', 'Accessories'],
-    outdoor: ['Sets', 'Chairs', 'Tables', 'Umbrellas'],
-  };
-
-  const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Products', path: '/products' },
-    { name: 'Living', path: '/products?category=Living', hasDropdown: true },
-    { name: 'Storage', path: '/products?category=Storage', hasDropdown: true },
-    { name: 'Dining', path: '/products?category=Dining', hasDropdown: true },
-    { name: 'Bedroom', path: '/products?category=Bedroom', hasDropdown: true },
-    { name: 'Study', path: '/products?category=Study', hasDropdown: true },
-    { name: 'Office', path: '/products?category=Office', hasDropdown: true },
-    { name: 'Outdoor', path: '/products?category=Outdoor', hasDropdown: true },
-  ];
-
   const handleNavClick = (path, name) => {
     setActivePath(path);
     setActiveDropdown(activeDropdown === name.toLowerCase() ? null : name.toLowerCase());
     navigate(path);
-  };
-
-  const Dropdown = ({ options, isOpen, categoryName }) => {
-    if (!isOpen) return null;
-
-    return (
-      <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-        {options.map((option, index) => (
-          <Link
-            key={index}
-            to={`/products?category=${categoryName}&search=${option}`}
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          >
-            {option}
-          </Link>
-        ))}
-      </div>
-    );
   };
 
   return (
