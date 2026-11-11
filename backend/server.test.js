@@ -77,4 +77,42 @@ describe('Backend APIs', () => {
     expect(res.body[0]).toHaveProperty('items');
     expect(Array.isArray(res.body[0].items)).toBe(true);
   });
+
+  it('should reject orders with negative or zero quantities', async () => {
+    const allProducts = await request(app).get('/api/products');
+    const productId = allProducts.body[0].id;
+
+    // Test zero quantity
+    const resZero = await request(app)
+      .post('/api/orders')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        items: [{ productId: productId, quantity: 0 }]
+      });
+
+    expect(resZero.status).toBe(400);
+    expect(resZero.body).toHaveProperty('error');
+
+    // Test negative quantity
+    const resNegative = await request(app)
+      .post('/api/orders')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        items: [{ productId: productId, quantity: -5 }]
+      });
+
+    expect(resNegative.status).toBe(400);
+    expect(resNegative.body).toHaveProperty('error');
+
+    // Test fractional quantity
+    const resFractional = await request(app)
+      .post('/api/orders')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        items: [{ productId: productId, quantity: 1.5 }]
+      });
+
+    expect(resFractional.status).toBe(400);
+    expect(resFractional.body).toHaveProperty('error');
+  });
 });

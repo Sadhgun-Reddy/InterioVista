@@ -126,8 +126,15 @@ app.get('/api/products/:id', (req, res) => {
 app.post('/api/orders', authenticateToken, (req, res) => {
     const { items } = req.body; // items: [{productId, quantity}]
 
-    if (!items || items.length === 0) {
+    if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: 'Order must contain items' });
+    }
+
+    // 🛡️ Sentinel Security Fix: Validate quantity to prevent negative or zero quantities.
+    for (const item of items) {
+        if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+            return res.status(400).json({ error: 'Invalid quantity for one or more items' });
+        }
     }
 
     // 🛡️ Sentinel Security Fix: Do not trust client-provided price and totalAmount.
